@@ -1,0 +1,20 @@
+package main
+
+import (
+	"flag"
+	"fmt"
+)
+
+func main() {
+	fmt.Println("*** Прогноз погоды ***")
+	fmt.Println("")
+
+	city := flag.String("city", "", "Город пользователя")
+	format := flag.Int("format", 1, "Формат вывода погоды")
+
+	flag.Parse()
+
+	fmt.Println(*city)
+	fmt.Println(*format)
+
+}
