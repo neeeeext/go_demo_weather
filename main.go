@@ -1,6 +1,8 @@
 package main
 
 import (
+	"app/geo"
+	"app/weather"
 	"flag"
 	"fmt"
 )
@@ -14,7 +16,11 @@ func main() {
 
 	flag.Parse()
 
-	fmt.Println(*city)
-	fmt.Println(*format)
+	geoData, err := geo.GetMyLocation(*city)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
+	nowWeather := weather.GetWeather(*geoData, *format)
+	fmt.Println(nowWeather)
 }
