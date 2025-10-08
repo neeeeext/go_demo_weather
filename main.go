@@ -19,6 +19,7 @@ func main() {
 	geoData, err := geo.GetMyLocation(*city)
 	if err != nil {
 		fmt.Println(err.Error())
+		return
 	}
 
 	weatherData := weather.GetWeather(*geoData, *format)

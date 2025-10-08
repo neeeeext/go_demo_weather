@@ -15,17 +15,17 @@ func GetWeather(geo geo.GeoData, format int) string {
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println(err)
-		return " "
+		return ""
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
 		fmt.Println(errors.New("NOT 200"))
-		return " "
+		return ""
 	}
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println(err)
-		return " "
+		return ""
 	}
 	return string(body)
 }

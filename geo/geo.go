@@ -1,19 +1,19 @@
 package geo
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 )
 
 type GeoData struct {
 	City string `json:"city"`
 }
 
-type isCityResponce struct {
+type isCityResponse struct {
 	Error bool `json:"error"`
 }
 
@@ -21,7 +21,7 @@ func GetMyLocation(city string) (*GeoData, error) {
 	if city != "" {
 		isCity := checkCity(city)
 		if !isCity {
-			return nil, errors.New("NOCITY")
+			return nil, errors.New("такого города нет")
 		}
 		return &GeoData{
 			City: city,
@@ -45,24 +45,25 @@ func GetMyLocation(city string) (*GeoData, error) {
 }
 
 func checkCity(city string) bool {
-	postBody, err := json.Marshal(map[string]string{
-		"city": city,
-	})
-	if err != nil {
-		fmt.Println(err)
-		return false
-	}
-	resp, err := http.Post("https://countriesnow.space/api/v0.1/tountries/population/cities", "application/json", bytes.NewBuffer(postBody))
+	escapeCity := url.QueryEscape(city)
+	apiUrl := "https://countriesnow.space/api/v0.1/countries/population/cities/q?city=" + escapeCity
+	resp, err := http.Get(apiUrl)
 	if err != nil {
 		fmt.Println(err)
 		return false
 	}
 	defer resp.Body.Close()
+
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
+		fmt.Println(err)
 		return false
 	}
-	var cityTrue isCityResponce
+	var cityTrue isCityResponse
 	json.Unmarshal(body, &cityTrue)
+	if err := json.Unmarshal(body, &cityTrue); err != nil {
+		fmt.Println("Ошибка разбора JSON:", err)
+		return false
+	}
 	return !cityTrue.Error
 }
