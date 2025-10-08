@@ -17,11 +17,13 @@ type isCityResponse struct {
 	Error bool `json:"error"`
 }
 
+var ErrNoCity = errors.New("такого города нет")
+
 func GetMyLocation(city string) (*GeoData, error) {
 	if city != "" {
 		isCity := checkCity(city)
 		if !isCity {
-			return nil, errors.New("такого города нет")
+			return nil, ErrNoCity
 		}
 		return &GeoData{
 			City: city,

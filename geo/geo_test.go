@@ -5,6 +5,7 @@ import (
 	"testing"
 )
 
+// positive test
 func TestGetMyLocation(t *testing.T) {
 	// Arrange - подготовка, expected результат, данные для функции
 	city := "London"
@@ -19,5 +20,14 @@ func TestGetMyLocation(t *testing.T) {
 	}
 	if got.City != expected.City {
 		t.Errorf("Ожидалось %v, полученно %v", expected, got)
+	}
+}
+
+// negative test
+func TestGetMyLocationNoCity(t *testing.T) {
+	city := "Londonwww"
+	_, err := geo.GetMyLocation(city)
+	if err != geo.ErrNoCity {
+		t.Errorf("Ожидалось %v, полученно %v", geo.ErrNoCity, err)
 	}
 }
